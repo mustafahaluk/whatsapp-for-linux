@@ -25,13 +25,23 @@ jobs:
 before_script:
   - eval "${MATRIX_EVAL}"
   - cmake --version
-  - mkdir -p build/debug
-  - mkdir -p build/release
+  # - mkdir -p build/debug
+  # - mkdir -p build/release
 
 script:
-  - cd build/debug
-  - cmake -j2 -DCMAKE_BUILD_TYPE=Debug ../..
-  - make
-  - cd ../release
-  - cmake -j2 -DCMAKE_BUILD_TYPE=Release ../..
-  - make
+  # - cd build/debug
+  # - cmake -j2 -DCMAKE_BUILD_TYPE=Debug ../..
+  # - make
+  # - cd ../release
+  # - cmake -j2 -DCMAKE_BUILD_TYPE=Release ../..
+  # - make
+  - dpkg-buildpackage -us -ui -uc
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH_TOKEN
+  file: ../*.deb
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
